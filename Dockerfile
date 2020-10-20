@@ -11,7 +11,8 @@ FROM balenalib/armv7hf-debian-python
 COPY --from=builder /tmp/build-oci-cli /tmp/build-oci-cli
 
 RUN [ "cross-build-start" ]
-RUN pip3 install --no-index --find-links=/tmp/build-oci-cli/wheels oci-cli \
+RUN ls /tmp/build-oci-cli
+RUN pip3 install --no-index --find-links=/tmp/build-oci-cli oci-cli \
     && rm -rf /tmp/build-oci-cli
 RUN useradd -m oci
 RUN [ "cross-build-end" ]
