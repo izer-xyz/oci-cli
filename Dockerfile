@@ -5,7 +5,7 @@ FROM balenalib/${ARCH}-debian-python:build as builder
 ARG PKG
 RUN [ "cross-build-start" ]
 RUN pip3 install wheel \
-    && python3 -c "import wheel.pep425tags as w; print('\n'.join(['-'.join(p) for p in w.get_supported()]))" \
+    && python3 -c "from pip import pep425tags;print(pep425tags.supported_tags)" \
     && pip3 wheel ${PKG} --wheel-dir=/tmp/build-${PKG}
 RUN [ "cross-build-end" ]
 
@@ -16,7 +16,7 @@ WORKDIR /tmp/build-${PKG}
 RUN [ "cross-build-start" ]
 RUN ls /tmp/build-${PKG} \
     && pip3 install wheel \
-    && python3 -c "import wheel.pep425tags as w; print('\n'.join(['-'.join(p) for p in w.get_supported()]))"
+    && python3 -c "from pip import pep425tags;print(pep425tags.supported_tags)"
 RUN pip3 install --no-index --find-links=/tmp/build-${PKG} PyYAML-5.3.1-cp38-cp38-linux_armv7l.whl \
     && rm -rf /tmp/build-${PKG}
 RUN useradd -m ${PKG}
