@@ -1,22 +1,23 @@
-FROM balenalib/armv7hf-debian-python:build as builder
+ARG ARCH=armv7hf
+ARG PKG=PyYAML
 
+FROM balenalib/${ARCH}-debian-python:build as builder
+ARG PKG
 RUN [ "cross-build-start" ]
 RUN pip3 install wheel \
-    && pip3 wheel oci-cli --wheel-dir=/tmp/build-oci-cli
+    && pip3 wheel ${PKG} --wheel-dir=/tmp/build-${PKG}
 RUN [ "cross-build-end" ]
 
-
-FROM balenalib/armv7hf-debian-python
-
-COPY --from=builder /tmp/build-oci-cli /tmp/build-oci-cli
-
+FROM balenalib/${ARCH}-debian-python
+ARG PKG
+COPY --from=builder /tmp/build-${PKG} /tmp/build-${PKG}
 RUN [ "cross-build-start" ]
-RUN ls /tmp/build-oci-cli
-RUN pip3 install --no-index --find-links=/tmp/build-oci-cli oci-cli \
-    && rm -rf /tmp/build-oci-cli
-RUN useradd -m oci
+RUN ls /tmp/build-${PKG}
+RUN pip3 install --no-index --find-links=/tmp/build-${PKG} ${PKG} \
+    && rm -rf /tmp/build-${PKG}
+RUN useradd -m ${PKG}
 RUN [ "cross-build-end" ]
 
-USER oci
+USER ${PKG}
 
 ENTRYPOINT [ "oci" ]
