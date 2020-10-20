@@ -1,7 +1,7 @@
 ARG ARCH=armv7hf
 ARG PKG=PyYAML
 
-FROM balenalib/${ARCH}-debian-python:build as builder
+FROM balenalib/${ARCH}-debian-python:3.8-build as builder
 ARG PKG
 RUN [ "cross-build-start" ]
 RUN pip3 install wheel==0.34.1 \
@@ -9,7 +9,7 @@ RUN pip3 install wheel==0.34.1 \
     && pip3 wheel ${PKG} --wheel-dir=/tmp/build-${PKG}
 RUN [ "cross-build-end" ]
 
-FROM balenalib/${ARCH}-debian-python
+FROM balenalib/${ARCH}-debian-python:3.8
 ARG PKG
 COPY --from=builder /tmp/build-${PKG} /tmp/build-${PKG}
 WORKDIR /tmp/build-${PKG}
