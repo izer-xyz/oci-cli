@@ -11,9 +11,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Get latest release
+      uses: octokit/request-action@v2.x
+      id: latest_release
+      with:
+          route: GET /repos/oracle/oci-cli/releases/latest
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Parse json release file
+      id: release
+      run: |
+          tag_name=$(echo "$release" | jq -r '.tag_name' | tr -d 'a-zA-Z')
+          echo "::set-output name=tag_name::$tag_name"
+      env:
+          release : ${{ steps.latest_release.outputs.data }}
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file Dockerfile --tag oci-cli:$VERSION
+      env:
+        VERSION: ${{ steps.release.outputs.tag_name }}
     - name: Log into GitHub Container Registry
       run: echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
     - name: Push image to GitHub Container Registry
@@ -25,6 +41,8 @@ jobs:
           echo VERSION=$VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:latest
+          docker push $IMAGE_ID:latest
       env:
         IMAGE_NAME: oci-cli
-        VERSION: latest
+        VERSION: ${{ steps.release.outputs.tag_name }}
