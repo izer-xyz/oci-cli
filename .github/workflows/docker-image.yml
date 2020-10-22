@@ -27,7 +27,7 @@ jobs:
           release : ${{ steps.latest_release.outputs.data }}
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag oci-cli --build-arg PKG_VERSION=$VERSION
+      run: docker build . --file Dockerfile --tag oci-cli --build-arg "PKG_VERSION=$VERSION"
       env:
         VERSION: ${{ steps.release.outputs.tag_name }}
     - name: Log into GitHub Container Registry
