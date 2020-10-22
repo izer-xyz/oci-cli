@@ -27,7 +27,7 @@ jobs:
           release : ${{ steps.latest_release.outputs.data }}
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag oci-cli --build-arg PKG_VERSION=${{ steps.release.outputs.tag_name }}
+      run: docker build . --file Dockerfile --tag oci-cli --build-arg PKG_VERSION1=${{ steps.release.outputs.tag_name }}
     - name: Log into GitHub Container Registry
       run: echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
     - name: Push image to GitHub Container Registry
