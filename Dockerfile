@@ -21,5 +21,5 @@ RUN useradd -m ${PKG}
 RUN [ "cross-build-end" ]
 
 USER ${PKG}
-
+WORKDIR /
 ENTRYPOINT [ "oci" ]
