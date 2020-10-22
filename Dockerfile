@@ -7,7 +7,7 @@ FROM balenalib/${ARCH}-debian-python:${PYTHON_VERSION}-build as builder
 ARG PKG
 RUN [ "cross-build-start" ]
 RUN pip3 install wheel \
-    && echo v${PKG_VERSION}v \
+    && echo ${PKG_VERSION} \
     && pip3 wheel ${PKG}==${PKG_VERSION} --wheel-dir=/tmp/build-${PKG}
 RUN [ "cross-build-end" ]
 
