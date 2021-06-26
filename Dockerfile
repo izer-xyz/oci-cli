@@ -7,13 +7,13 @@ FROM balenalib/${ARCH}-debian-python:${PYTHON_VERSION}-build as builder
 ARG PKG
 ARG PKG_VERSION
 RUN [ "cross-build-start" ]
-RUN install_packages rustc
 RUN pip3 install wheel \
     && pip3 wheel ${PKG}==${PKG_VERSION} --wheel-dir=/tmp/build-${PKG}
 RUN [ "cross-build-end" ]
 
 FROM balenalib/${ARCH}-debian-python:${PYTHON_VERSION}
 ARG PKG
+ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 COPY --from=builder /tmp/build-${PKG} /tmp/build-${PKG}
 WORKDIR /tmp/build-${PKG}
 RUN [ "cross-build-start" ]
