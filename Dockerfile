@@ -6,6 +6,7 @@ ARG PKG_VERSION=2.25.4
 FROM balenalib/${ARCH}-debian-python:${PYTHON_VERSION}-build as builder
 ARG PKG
 ARG PKG_VERSION
+ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 RUN [ "cross-build-start" ]
 RUN pip3 install wheel \
     && pip3 wheel ${PKG}==${PKG_VERSION} --wheel-dir=/tmp/build-${PKG}
@@ -13,7 +14,6 @@ RUN [ "cross-build-end" ]
 
 FROM balenalib/${ARCH}-debian-python:${PYTHON_VERSION}
 ARG PKG
-ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 COPY --from=builder /tmp/build-${PKG} /tmp/build-${PKG}
 WORKDIR /tmp/build-${PKG}
 RUN [ "cross-build-start" ]
