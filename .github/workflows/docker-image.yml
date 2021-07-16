@@ -27,7 +27,7 @@ jobs:
           release : ${{ steps.latest_release.outputs.data }}
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag oci-cli --build-arg PKG_VERSION=$VERSION --build-arg ARCH=amd64
+      run: docker build . --file Dockerfile --tag oci-cli --build-arg PKG_VERSION=$VERSION --build-arg ARCH=armv7hf
       env:
         VERSION: ${{ steps.release.outputs.tag_name }}
     - name: Log into GitHub Container Registry
@@ -41,5 +41,5 @@ jobs:
           docker tag $IMAGE_NAME $IMAGE_ID:latest
           docker push $IMAGE_ID:latest
       env:
-        IMAGE_NAME: oci-cli-amd64
+        IMAGE_NAME: oci-cli
         VERSION: ${{ steps.release.outputs.tag_name }}
