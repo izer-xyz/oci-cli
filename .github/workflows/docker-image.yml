@@ -38,8 +38,8 @@ jobs:
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-          docker tag $IMAGE_NAME $IMAGE_ID:latest
+          docker tag $IMAGE_NAME $IMAGE_ID:latest-amd64
           docker push $IMAGE_ID:latest
       env:
-        IMAGE_NAME: oci-cli-amd64
-        VERSION: ${{ steps.release.outputs.tag_name }}
+        IMAGE_NAME: oci-cli
+        VERSION: ${{ steps.release.outputs.tag_name }}-amd64
