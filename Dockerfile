@@ -7,10 +7,12 @@ FROM balenalib/${ARCH}-debian-python:${PYTHON_VERSION}-build as builder
 ARG PKG
 ARG PKG_VERSION
 ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
-RUN [ "cross-build-start" ]
+
+RUN if [ ${ARCH} = "armv7hf" ] ; then [ "cross-build-start" ] ; fi
+
 RUN pip3 install wheel \
     && pip3 wheel ${PKG}==${PKG_VERSION} --wheel-dir=/tmp/build-${PKG}
-RUN [ "cross-build-end" ]
+RUN if [ ${ARCH} = "armv7hf" ] ; then [ "cross-build-end" ] ; fi
 
 FROM balenalib/${ARCH}-debian-python:${PYTHON_VERSION}
 ARG PKG
