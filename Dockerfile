@@ -1,7 +1,7 @@
 ARG ARCH=armv7hf
 ARG PYTHON_VERSION=3.8
 ARG PKG=oci-cli
-ARG PKG_VERSION=2.25.4
+ARG PKG_VERSION=3.50.2
 
 FROM balenalib/${ARCH}-debian-python:${PYTHON_VERSION}-build as builder
 ARG PKG
